@@ -5,6 +5,7 @@ import data from 'data.json';
 
 import Filter from './Filter';
 import Form from './Form';
+import ContactsList from './ContactsList';
 
 class App extends Component {
   state = {
@@ -52,6 +53,12 @@ class App extends Component {
     }
   };
 
+  onContactDelete = id => {
+    this.setState(({ contacts }) => {
+      return { contacts: [...contacts].filter(el => el.id !== id) };
+    });
+  };
+
   render() {
     const contactList = this.getVisibleContacts();
 
@@ -62,17 +69,14 @@ class App extends Component {
           onSearch={this.onFilterContacts}
           searchValue={this.state.filter}
         />
-        <ul>
-          {contactList.map(el => {
-            return (
-              <li key={el.id}>
-                <p>{el.name}</p>
-                <p>{el.number}</p>
-                <button>Remove</button>
-              </li>
-            );
-          })}
-        </ul>
+        {contactList.length ? (
+          <ContactsList
+            contacts={contactList}
+            onDelete={this.onContactDelete}
+          ></ContactsList>
+        ) : (
+          <p>Sorry, no contacts found </p>
+        )}
       </div>
     );
   }

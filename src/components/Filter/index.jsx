@@ -4,7 +4,7 @@ function Filter({ searchValue, onSearch }) {
       Search contacts by name
       <input
         id="filter"
-        className=""
+        className="input"
         name="filter"
         type="text"
         value={searchValue}

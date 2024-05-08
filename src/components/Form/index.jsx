@@ -1,3 +1,4 @@
+import s from './Form.module.css';
 import { Component } from 'react';
 
 class Form extends Component {
@@ -24,11 +25,12 @@ class Form extends Component {
 
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
+      <form className={s.form} onSubmit={this.onSubmit}>
         <label htmlFor="name">
           Name
           <input
             id="name"
+            className="input"
             type="text"
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -42,6 +44,7 @@ class Form extends Component {
           Number
           <input
             id="number"
+            className="input"
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -51,7 +54,9 @@ class Form extends Component {
             value={this.state.number}
           />
         </label>
-        <button type="submit">Add contact</button>
+        <button type="submit" className="button">
+          Add contact
+        </button>
       </form>
     );
   }
