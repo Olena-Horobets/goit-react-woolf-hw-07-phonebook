@@ -29,6 +29,13 @@ class App extends Component {
   onFormSubmit = data => {
     data.id = nanoid();
 
+    if (!data.name.trim()) {
+      const newName = prompt(
+        'Name cannot be empty. Please, enter the name below'
+      );
+      data.name = newName;
+    }
+
     const savedContact = this.state.contacts.find(
       el => el.number === data.number
     );
@@ -38,9 +45,13 @@ class App extends Component {
       );
     }
 
-    if (this.state.contacts.some(el => el.name === data.name)) {
+    if (
+      this.state.contacts.some(
+        el => el.name.toLowerCase() === data.name.toLowerCase()
+      )
+    ) {
       const newName = prompt(
-        'This name is alreday used. Please, use different name'
+        'This name is already used. Please, use different name'
       );
       data.name = newName;
     }
