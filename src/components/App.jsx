@@ -1,17 +1,30 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
 
-import data from 'data.json';
-
 import Filter from './Filter';
 import Form from './Form';
 import ContactsList from './ContactsList';
 
+const CONTACTS = 'contacts';
 class App extends Component {
   state = {
-    contacts: [...data],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = localStorage.getItem(CONTACTS);
+
+    savedContacts && this.setState({ contacts: JSON.parse(savedContacts) });
+  }
+
+  componentDidUpdate(prevState) {
+    const newContacts = this.state.contacts;
+    const prevContacts = prevState.contacts;
+
+    newContacts !== prevContacts &&
+      localStorage.setItem(CONTACTS, JSON.stringify(newContacts));
+  }
 
   onFormSubmit = data => {
     data.id = nanoid();
