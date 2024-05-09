@@ -22,6 +22,10 @@ ul {
   margin: 0;
 }
 
+.container {
+  padding: 40px;
+}
+
 .button {
   color: rgb(255, 255, 243);
   background-color: rgb(99, 88, 204);

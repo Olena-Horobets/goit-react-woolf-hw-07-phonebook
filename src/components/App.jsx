@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 
 import Filter from './Filter';
@@ -6,27 +6,18 @@ import Form from './Form';
 import ContactsList from './ContactsList';
 
 const CONTACTS = 'contacts';
-class App extends Component {
-  state = {
-    contacts: [],
-    filter: '',
-  };
 
-  componentDidMount() {
-    const savedContacts = localStorage.getItem(CONTACTS);
+function App() {
+  const [contacts, setContacts] = useState(
+    JSON.parse(localStorage.getItem(CONTACTS)) ?? []
+  );
+  const [filter, setFilter] = useState('');
 
-    savedContacts && this.setState({ contacts: JSON.parse(savedContacts) });
-  }
+  useEffect(() => {
+    localStorage.setItem(CONTACTS, JSON.stringify(contacts));
+  }, [contacts]);
 
-  componentDidUpdate(prevState) {
-    const newContacts = this.state.contacts;
-    const prevContacts = prevState.contacts;
-
-    newContacts !== prevContacts &&
-      localStorage.setItem(CONTACTS, JSON.stringify(newContacts));
-  }
-
-  onFormSubmit = data => {
+  const onFormSubmit = data => {
     data.id = nanoid();
 
     if (!data.name.trim()) {
@@ -36,9 +27,7 @@ class App extends Component {
       data.name = newName;
     }
 
-    const savedContact = this.state.contacts.find(
-      el => el.number === data.number
-    );
+    const savedContact = contacts.find(el => el.number === data.number);
     if (savedContact) {
       return alert(
         `This number is already saved under "${savedContact.name}" name`
@@ -46,9 +35,7 @@ class App extends Component {
     }
 
     if (
-      this.state.contacts.some(
-        el => el.name.toLowerCase() === data.name.toLowerCase()
-      )
+      contacts.some(el => el.name.toLowerCase() === data.name.toLowerCase())
     ) {
       const newName = prompt(
         'This name is already used. Please, use different name'
@@ -56,20 +43,16 @@ class App extends Component {
       data.name = newName;
     }
 
-    this.setState(({ contacts }) => {
-      return { contacts: [data, ...contacts] };
-    });
+    setContacts(prev => [data, ...prev]);
   };
 
-  onFilterContacts = e => {
-    this.setState({ filter: e.currentTarget.value });
+  const onFilterContacts = e => {
+    setFilter(e.currentTarget.value);
   };
 
-  getVisibleContacts = () => {
-    const { filter, contacts } = this.state;
-
+  const getVisibleContacts = () => {
     if (filter) {
-      return this.state.contacts.filter(el =>
+      return contacts.filter(el =>
         el.name.toLowerCase().includes(filter.toLocaleLowerCase())
       );
     } else {
@@ -77,33 +60,26 @@ class App extends Component {
     }
   };
 
-  onContactDelete = id => {
-    this.setState(({ contacts }) => {
-      return { contacts: [...contacts].filter(el => el.id !== id) };
-    });
+  const onContactDelete = id => {
+    setContacts(prev => [...prev].filter(el => el.id !== id));
   };
 
-  render() {
-    const contactList = this.getVisibleContacts();
+  const contactList = getVisibleContacts();
 
-    return (
-      <div>
-        <Form onSubmit={this.onFormSubmit}></Form>
-        <Filter
-          onSearch={this.onFilterContacts}
-          searchValue={this.state.filter}
-        />
-        {contactList.length ? (
-          <ContactsList
-            contacts={contactList}
-            onDelete={this.onContactDelete}
-          ></ContactsList>
-        ) : (
-          <p>Sorry, no contacts found </p>
-        )}
-      </div>
-    );
-  }
+  return (
+    <div className="container">
+      <Form onSubmit={onFormSubmit}></Form>
+      <Filter onSearch={onFilterContacts} searchValue={filter} />
+      {contactList.length ? (
+        <ContactsList
+          contacts={contactList}
+          onDelete={onContactDelete}
+        ></ContactsList>
+      ) : (
+        <p>Sorry, no contacts found </p>
+      )}
+    </div>
+  );
 }
 
 export { App };
