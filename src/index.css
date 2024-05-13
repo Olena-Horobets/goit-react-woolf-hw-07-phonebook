@@ -1,5 +1,9 @@
 @import-normalize; /* bring in normalize.css styles */
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -53,6 +57,27 @@ label {
   flex-direction: column;
   gap: 6px;
   margin-bottom: 16px;
+}
+
+.filterWrapper {
+  position: relative;
+  width: 400px;
+}
+
+.clearBtn {
+  color: rgb(255, 255, 243);
+  background-color: rgb(99, 88, 204);
+  border-radius: 4px;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  top: 25px;
+  right: 0;
+}
+
+.clearBtn:hover {
+  background-color: rgb(68, 55, 185);
 }
 
 ul {

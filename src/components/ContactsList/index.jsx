@@ -1,18 +1,20 @@
+import { useSelector } from 'react-redux';
+
 import ContactsItem from 'components/ContactsItem';
 
-function ContactsList({ contacts, onDelete }) {
-  return (
+import { selectFilteredContacts } from 'store/contacts/selectors';
+
+function ContactsList() {
+  const contacts = useSelector(selectFilteredContacts);
+
+  return contacts.length ? (
     <ul>
       {contacts.map(el => {
-        return (
-          <ContactsItem
-            key={el.id}
-            item={el}
-            onDelete={onDelete}
-          ></ContactsItem>
-        );
+        return <ContactsItem key={el.id} item={el}></ContactsItem>;
       })}
     </ul>
+  ) : (
+    <p>Sorry, no contacts found </p>
   );
 }
 
