@@ -1,4 +1,12 @@
-function Filter({ searchValue, onSearch }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from 'store/filter/slice';
+
+function Filter() {
+  const filter = useSelector(state => state.filter);
+  const dispatch = useDispatch();
+
+  const onSearch = e => dispatch(setFilter(e.currentTarget.value));
+
   return (
     <label htmlFor="filter">
       Search contacts by name
@@ -7,7 +15,7 @@ function Filter({ searchValue, onSearch }) {
         className="input"
         name="filter"
         type="text"
-        value={searchValue}
+        value={filter}
         onChange={onSearch}
         autoComplete="off"
       ></input>
