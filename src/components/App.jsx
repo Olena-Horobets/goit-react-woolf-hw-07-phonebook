@@ -1,25 +1,17 @@
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
-
 import Filter from './Filter';
 import Form from './Form';
 import ContactsList from './ContactsList';
-
-const CONTACTS = 'contacts';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContactAction, removeContactAction } from 'store/contacts/slice';
 
 function App() {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem(CONTACTS)) ?? []
-  );
-  const [filter, setFilter] = useState('');
+  const contacts = useSelector(state => state.contacts);
+  const filter = useSelector(state => state.filter);
 
-  useEffect(() => {
-    localStorage.setItem(CONTACTS, JSON.stringify(contacts));
-  }, [contacts]);
+  const dispatch = useDispatch();
+  const addContact = addContactAction;
 
   const onFormSubmit = data => {
-    data.id = nanoid();
-
     if (!data.name.trim()) {
       const newName = prompt(
         'Name cannot be empty. Please, enter the name below'
@@ -43,25 +35,21 @@ function App() {
       data.name = newName;
     }
 
-    setContacts(prev => [data, ...prev]);
-  };
-
-  const onFilterContacts = e => {
-    setFilter(e.currentTarget.value);
+    dispatch(addContact(data));
   };
 
   const getVisibleContacts = () => {
     if (filter) {
-      return contacts.filter(el =>
-        el.name.toLowerCase().includes(filter.toLocaleLowerCase())
-      );
+      return contacts.filter(el => {
+        return el.name.toLowerCase().includes(filter.toLocaleLowerCase());
+      });
     } else {
       return contacts;
     }
   };
 
   const onContactDelete = id => {
-    setContacts(prev => [...prev].filter(el => el.id !== id));
+    dispatch(removeContactAction(id));
   };
 
   const contactList = getVisibleContacts();
@@ -69,7 +57,7 @@ function App() {
   return (
     <div className="container">
       <Form onSubmit={onFormSubmit}></Form>
-      <Filter onSearch={onFilterContacts} searchValue={filter} />
+      <Filter />
       {contactList.length ? (
         <ContactsList
           contacts={contactList}
