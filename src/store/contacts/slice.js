@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+
+import { addContact, deleteContact, getAllContacts } from 'api/contactsAPI';
+import {
+  handleFetcFulfilled,
+  handleFetcRejected,
+  handleFetchPending,
+} from 'store/helpers';
 
 const initialState = {
   items: [],
@@ -7,42 +13,17 @@ const initialState = {
   error: null,
 };
 
-axios.defaults.baseURL = 'https://61ba061948df2f0017e5a8a2.mockapi.io/contacts';
-
 export const getAllContactsAction = createAsyncThunk(
   'get/contacts',
-  async () => {
-    const { data } = await axios.get('/');
-    return data;
-  }
+  getAllContacts
 );
 
-export const addContactAction = createAsyncThunk('add/contacts', async body => {
-  const { data } = await axios.post('/', body);
-  return data;
-});
+export const addContactAction = createAsyncThunk('add/contacts', addContact);
 
 export const deleteContactAction = createAsyncThunk(
   'delete/contacts',
-  async id => {
-    await axios.delete(`/${id}`);
-    return id;
-  }
+  deleteContact
 );
-
-const handleFetchPending = state => {
-  state.isLoading = true;
-  state.error = '';
-};
-
-const handleFetcFulfilled = state => {
-  state.isLoading = false;
-};
-
-const handleFetcRejected = (state, { error }) => {
-  state.isLoading = false;
-  state.error = error.message;
-};
 
 export const contactsSlice = createSlice({
   name: 'contacts',
