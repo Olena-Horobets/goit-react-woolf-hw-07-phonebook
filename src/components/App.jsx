@@ -1,15 +1,26 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Filter from './Filter';
 import Form from './Form';
 import ContactsList from './ContactsList';
-import { useDispatch, useSelector } from 'react-redux';
-import { addContactAction, removeContactAction } from 'store/contacts/slice';
+
+import {
+  getAllContactsAction,
+  addContactAction,
+  deleteContactAction,
+} from 'store/contacts/slice';
 
 function App() {
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts.items);
   const filter = useSelector(state => state.filter);
 
   const dispatch = useDispatch();
-  const addContact = addContactAction;
+
+  useEffect(() => {
+    dispatch(getAllContactsAction());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onFormSubmit = data => {
     if (!data.name.trim()) {
@@ -35,7 +46,7 @@ function App() {
       data.name = newName;
     }
 
-    dispatch(addContact(data));
+    dispatch(addContactAction(data));
   };
 
   const getVisibleContacts = () => {
@@ -49,7 +60,7 @@ function App() {
   };
 
   const onContactDelete = id => {
-    dispatch(removeContactAction(id));
+    dispatch(deleteContactAction(id));
   };
 
   const contactList = getVisibleContacts();
