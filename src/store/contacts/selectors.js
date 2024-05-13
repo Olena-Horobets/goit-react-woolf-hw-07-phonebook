@@ -9,3 +9,5 @@ export const selectFilteredContacts = ({ contacts, filter }) => {
     return contacts.items;
   }
 };
+
+export const selectIsLoading = state => state.contacts.isLoading;
