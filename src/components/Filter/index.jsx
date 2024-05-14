@@ -5,7 +5,6 @@ import { selectFilter } from 'store/filter/selectors';
 
 function Filter() {
   const filter = useSelector(selectFilter);
-
   const dispatch = useDispatch();
 
   const onSearch = e => dispatch(setFilter(e.currentTarget.value));

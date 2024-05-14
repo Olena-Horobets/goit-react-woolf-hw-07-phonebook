@@ -10,7 +10,7 @@ function ContactsList() {
   return contacts.length ? (
     <ul>
       {contacts.map(el => {
-        return <ContactsItem key={el.id} item={el}></ContactsItem>;
+        return <ContactsItem key={el.id} item={el} />;
       })}
     </ul>
   ) : (
